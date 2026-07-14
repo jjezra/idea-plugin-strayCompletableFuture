@@ -1,0 +1,29 @@
+<html>
+<body>
+Reports <b>stray (uncollected) CompletableFuture</b> calls: an expression that produces a
+<code>java.util.concurrent.CompletableFuture</code> whose value is discarded as an expression
+statement.
+<p>
+When a future is neither awaited, chained (<code>thenApply</code>, <code>whenComplete</code>, &hellip;),
+returned, nor stored, any exception it completes with is silently swallowed and the caller never
+learns whether the asynchronous work finished. This is a frequent source of lost errors and races.
+</p>
+<p><b>Flagged:</b></p>
+<pre><code>
+CompletableFuture.runAsync(this::work);   // result discarded
+service.fetchAsync(id);                   // returns CompletableFuture&lt;?&gt;, discarded
+future.thenApply(x -&gt; x + 1);             // new future discarded
+</code></pre>
+<p><b>Not flagged</b> (the future is collected):</p>
+<pre><code>
+CompletableFuture&lt;Void&gt; f = CompletableFuture.runAsync(this::work);
+return service.fetchAsync(id);
+allFutures.add(service.fetchAsync(id));
+service.fetchAsync(id).join();
+</code></pre>
+<p>
+Suppress a deliberate fire-and-forget call with <code>//noinspection StrayCompletableFuture</code>
+on the line above, or via the usual quick-fix menu.
+</p>
+</body>
+</html>

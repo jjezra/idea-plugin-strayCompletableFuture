@@ -1,0 +1,28 @@
+<idea-plugin>
+    <id>com.example.idea-plugin-strayCompletableFuture</id>
+    <name>Stray CompletableFuture Detector</name>
+    <version>0.1.0</version>
+    <vendor>example</vendor>
+
+    <description><![CDATA[
+        Highlights <b>stray (uncollected) CompletableFuture</b> calls in Java code &mdash; expressions
+        that return a <code>CompletableFuture</code> whose result is discarded as a statement, so the
+        future is never awaited, chained, returned, or stored. Such futures silently swallow exceptions
+        and leave async work unobserved.
+    ]]></description>
+
+    <!-- Platform + Java PSU support (we inspect Java code). -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection
+                language="JAVA"
+                shortName="StrayCompletableFuture"
+                displayName="Stray (uncollected) CompletableFuture"
+                groupName="Probable bugs"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="com.example.cfd.StrayCompletableFutureInspection"/>
+    </extensions>
+</idea-plugin>
